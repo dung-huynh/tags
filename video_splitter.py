@@ -1,23 +1,24 @@
 import cv2, os, sys
 
-#videoName needs to become input.
-#step 1: Take video, make a new directory for images
-videoName = 'Mortal Engines - Official Trailer (HD).mp4'
-directoryName = videoName[:10]+"Frames"
-vidcap = cv2.VideoCapture(videoName)
-try:
-  os.makedirs(directoryName)
-except:
-  print("Error creating directory")
-  sys.exit()
+def split_video(filename, path, skip):
+    # create the frames folder if not yet existed
+    if not os.path.isdir(path):
+        try:
+            os.makedirs(path)
+        except:
+            sys.exit()
 
-#step2: Loop over all frames. Every tenth frame, save.
-success,image = vidcap.read()
-count = 0
-i = 0
-while success:
-  if i % 10 == 0:
-    cv2.imwrite(directoryName + "/frame_%d.jpg" % count, image)     # save frame as JPEG file
-    count += 1
-  success,image = vidcap.read()
-  i += 1
+    # create a VideoCapture object for reading frames
+    vidcap = cv2.VideoCapture(filename)
+
+    # read and export every nth frame
+    frame_index = 0
+    success, image = vidcap.read()
+    while success:
+        if frame_index % skip == 0:
+            print('split_video: %d' % frame_index)
+            cv2.imwrite(path + "/%d.jpg" % int(frame_index/skip), image)
+        frame_index += 1
+        success, image = vidcap.read()
+
+# split_video('../video.mp4', '../frames/', 30)

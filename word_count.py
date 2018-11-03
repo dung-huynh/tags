@@ -1,40 +1,42 @@
 import io
 import os
 
-# Imports the Google Cloud client library
 from collections import Counter
 from google.cloud import vision
 from google.cloud.vision import types
 
-# Instantiates a client
-client = vision.ImageAnnotatorClient()
+def get_file_number(file):
+    return int(file.split('.')[0])
 
-path = '/home/osama/Desktop/Hackathons/jacobsHack/tags/frames/'
-frames = {}
-objects = []
-total = {}
-counter = 1
+def annotate_frames(path):
+    client = vision.ImageAnnotatorClient()
+    frames = []
 
-#iterating over every frame in a folder
-for frame in os.listdir(path):
-    file_name = os.path.join(os.path.dirname(path), frame)
+    # sort files in an ascending order
+    files = [f for f in os.listdir(path) if not f.startswith('.')]
+    files.sort(key=get_file_number)
 
-    with io.open(file_name, 'rb') as image_file:
-        content = image_file.read()
+    for file in files:
+        print('annotate_frames: %s' % file)
 
-    image = types.Image(content=content)
+        # get the image
+        file_name = os.path.join(os.path.dirname(path), file)
+        with io.open(file_name, 'rb') as image_file:
+            content = image_file.read()
+        image = types.Image(content=content)
 
-    response = client.label_detection(image=image, max_results=20)
-    labels = response.label_annotations
-    
-    objects += [x.description for x in labels]    
+        # detect labels
+        response = client.label_detection(image=image, timeout=10)
+        labels = response.label_annotations
 
-    #printing the objects in each frame
-    frames[counter] = ([x.description for x in labels])
-    counter += 1
+        if len(labels) == 0:
+            frames.append(['none'])
+            continue
 
-#total = ((x,objects.count(x)) for x in set(objects))
-print(frames)
-print('')
-print(Counter(objects))
-print('')
+        # put each frame's labels into a list in frames
+        frames.append([x.description for x in labels])
+
+    return frames
+
+# for frame in annotate_frames('../frames/'):
+#     print(frame)
