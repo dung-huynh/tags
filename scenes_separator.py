@@ -1,7 +1,9 @@
 # each frame might have different amount of words
 
+# frames: [words], words: [w1, w2, w3]
+
 # threshold to determine how much errors determining the scene change
-max_error = 8
+percent_error = 0.35
 
 class Scene:
     def __init__(self, start_frame, words):
@@ -26,8 +28,11 @@ def separate(frames):
         shared_words = scene.intersection(frame)
         exclusive_words = frame.difference(scene)
 
+        # print(shared_words)
+        # print(exclusive_words)
+
         # absolute change: change scene (significant change)
-        if len(exclusive_words) >= max_error:
+        if len(shared_words) < len(exclusive_words)*percent_error:
             scenes[-1].interval[1] = fi
 
             # sort from max to min counts
@@ -55,6 +60,8 @@ sample = [["people", "table", "food", "dog", "spoon", "coffee", "chicken", "ligh
 ["kid", "shoes", "ball", "hat", "backpack", "table", "light", "food", "books", "door"],
 ["car", "street", "sky", "cloud", "sun", "light", "door", "house", "grass", "tree"],
 ["car", "wheel", "street", "light", "sky", "house", "man", "woman", "kid", "key"]]
+
+# separate(sample)
 
 for scene in separate(sample):
     print_scene(scene)
