@@ -69,3 +69,11 @@ class SceneAnnotator:
 
         # at this point, a scene is only a camera angle
         return scenes
+
+    def to_dict(scenes):
+        dictionary = {}
+        count = 1
+        for scene in scenes:
+            dictionary['Scene %d'.format(count)] = list(scene.words.keys())
+            count += 1
+        return dictionary
