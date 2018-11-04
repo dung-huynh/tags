@@ -1,10 +1,8 @@
-# Before starting: you must change all of the user-defined parameters at the bottom of the script!
-
 import cv2, os, sys
 
-from file import File
-from scene import SceneAnnotator
-from frame import FrameAnnotator
+from .file import File
+from .frame import FrameAnnotator
+from .scene import SceneAnnotator
 
 def annotate(path, filename, skip):
     frames = []
@@ -19,10 +17,7 @@ def annotate(path, filename, skip):
     # create a VideoCapture object for reading frames 
     # and retrieve its intrinsic parameters
     video = cv2.VideoCapture(filename)
-    fps = video.get(cv2.CAP_PROP_XI_FRAMERATE)
     frames_count = video.get(cv2.CAP_PROP_FRAME_COUNT)
-
-    # print('frame rate: %f' % fps)
 
     # read and export every nth frame from the video
     frame_index = 0
@@ -41,12 +36,12 @@ def annotate(path, filename, skip):
     # find all words in each frame
     count = 0
     files = File.get_files(path, '.jpg', File.get_named)
-    for file in files:
+    for f in files:
         # show process
         print('annotating frames: {:.3%}'.format(float(count/len(files))), end='\r')
 
         # annotate image and append it to the list of frames
-        frames.append(FrameAnnotator.annotate(File.get_content(path, file)))
+        frames.append(FrameAnnotator.annotate(File.get_content(path, f)))
 
         count += 1
     print()
@@ -57,15 +52,7 @@ def annotate(path, filename, skip):
 
     # get real frame index
     for scene in scenes:
-        # print words in scene
-        scene.show()
         scene.start *= skip
         scene.end *= skip
 
     return scenes
-
-# CHANGE HERE
-path = '../frames/'
-filename = '../videos/desert.mp4'
-skip = 50
-annotate(path, filename, skip)
