@@ -1,3 +1,4 @@
+<!-- scene descripton output page -->
 <!DOCTYPE html>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <html lang="en">
@@ -10,35 +11,58 @@
 <body>
     <style>
         .jumbotron{
-        background : #1764a8 !important;
+        background : #96c4ec !important;
         }
     </style>
     <div class="jumbotron text-center">
             <h1>Video Transcriber</h1>
             <p>video to tex</p> 
     </div>
-    <video width="900" height = "720" controls>
+    <style type="text/css">
+        video {
+            margin: 0 auto;
+            display: block;
+            width: 500px;
+        }
+    </style>
+    <video id="myVideo" width="900" height = "600" controls>
         {% block body %}
-        <source src = "{{ link }}" type="video/mp4">
+        <source src = "{{ link }}" type="video/mp4" style="video.currentTime = seconds;">
         {% endblock %}
         Your browser does not support HTML5 video.
     </video>
     <p>
-    <table style="width:100%">
+
+        {% for scene in data.keys() %}
+        <style type="text/css">
+            .card {
+                margin: 0 auto;
+                display: block;
+                width: 500px;
+                border: solid white 40px;
+            }
+        </style>
+        <div class="card bg-light text-dark w-75 text-center d-flex justify-content-center">
+            <div class="card-body"></div>
+            <h5 class="card-title">{{scene}}</h5>
+            <p class="card-text">
+                {% for word in data[scene] %} {{word}} {% endfor %}
+            </p>
+            <button onclick="setCurTime()" type="button">Watch on video</button>
+        </div>
+        {% endfor %}
+
+    <script>
+            var vid = document.getElementById("myVideo");
             
-        <tbody>
-            {% for scene in data.keys() %}
-            <div class="card bg-light text-dark w-75" 
-            style= "padding: 10px; border: solid white 40px;">
-                <div class="card-body"></div>
-                <h5 class="card-title">{{scene}}</h5>
-                <p class="card-text">
-                    {% for word in data[scene] %} {{word}} {% endfor %}
-                </p>
-            </div>
-            {% endfor %}
-        </tbody>
-    </table>
+            function getCurTime() { 
+                alert(vid.currentTime);
+            } 
+            
+            function setCurTime() { 
+                vid.currentTime=5;
+            } 
+            </script>
     </p>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
