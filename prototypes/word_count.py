@@ -5,8 +5,8 @@ from collections import Counter
 from google.cloud import vision
 from google.cloud.vision import types
 
-def get_file_number(file):
-    return int(file.split('.')[0])
+def get_file_number(filename):
+    return int(filename.split('.')[0])
 
 def annotate_frames(path):
     client = vision.ImageAnnotatorClient()

@@ -41,7 +41,7 @@ def annotate_scenes(frames):
             # sort from max to min counts
             scenes[-1].words = dict(sorted(scenes[-1].words.items(), key=lambda kv: kv[1], reverse=True))
 
-            scenes.append(Scene(fi, frames[fi]))
+            scenes.append(Scene(fi+1, frames[fi]))
 
         # relative change: stay in the same scene
         else:
