@@ -74,6 +74,6 @@ class SceneAnnotator:
         dictionary = {}
         count = 1
         for scene in scenes:
-            dictionary['Scene %d'.format(count)] = list(scene.words.keys())
+            dictionary['Scene '+str(count)] = list(scene.words.keys())
             count += 1
         return dictionary

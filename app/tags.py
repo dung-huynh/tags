@@ -1,8 +1,8 @@
 import cv2, os, sys
 
-from file import File
-from frame import FrameAnnotator
-from scene import SceneAnnotator
+from .file import File
+from .frame import FrameAnnotator
+from .scene import SceneAnnotator
 
 def annotate(path, filename, skip):
     frames = []
@@ -17,7 +17,6 @@ def annotate(path, filename, skip):
     # create a VideoCapture object for reading frames 
     # and retrieve its intrinsic parameters
     video = cv2.VideoCapture(filename)
-    fps = video.get(cv2.CAP_PROP_XI_FRAMERATE)
     frames_count = video.get(cv2.CAP_PROP_FRAME_COUNT)
 
     # read and export every nth frame from the video
@@ -53,8 +52,6 @@ def annotate(path, filename, skip):
 
     # get real frame index
     for scene in scenes:
-        # print words in scene
-        scene.show()
         scene.start *= skip
         scene.end *= skip
 
