@@ -18,12 +18,14 @@ def home():
 
 @app.route('/',methods = ['POST'])
 def form():
+    #Get url from html form
     video_url = request.form['link']
-    r = requests.get(video_url)
+
+    #Check if link refers to a valid video file
     video_file = video_url.split('/')[-1]
-    #yield "Downloading file: "  + video_file + '\n'
     if video_file.split('.')[-1] not in extensions:
        return "Invalid file format"
+    
     # create response object 
     r = requests.get(video_url, stream = True) 
         
