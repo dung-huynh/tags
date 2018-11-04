@@ -1,9 +1,14 @@
+import os, sys, shutil
 from bottle import route, run, template, request
-import requests
 import urllib.request
 
 from app.scene import SceneAnnotator
 from app.tags import annotate
+
+# adjust the skip amount per frames
+skip = 10
+if len(sys.argv) > 1:
+    skip = int(sys.argv[-1])
 
 extensions = ['.webm', '.mkv', '.flv', '.avi', '.mov', '.wmv', '.mpg','.mpeg','.m2v','.3gp','mp4']
 
@@ -23,12 +28,17 @@ def post():
 
     # download and save the video
     filename = "videos/video." + extension
-    # urllib.request.urlretrieve(url, filename)
+    urllib.request.urlretrieve(url, filename)
 
     # annotate video
     path = 'frames/'      # relative to the 'app' directory
-    skip = 10
     scenes = annotate(path, filename, skip)
+
+    # remove 'videos/video...' after reading it
+    os.remove(filename)
+
+    # remove 'frames' folder after using it
+    shutil.rmtree('frames')
     
     return template('templates/output.html', data=SceneAnnotator.to_dict(scenes), link=url)
 
