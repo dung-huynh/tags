@@ -51,8 +51,8 @@ def annotate(path, filename, skip):
     scenes = SceneAnnotator.group(frames, error)
 
     # get real frame index
-    for scene in scenes:
-        scene.start *= skip
-        scene.end *= skip
+    # for scene in scenes:
+    #     scene.start *= skip
+    #     scene.end *= skip
 
     return scenes
